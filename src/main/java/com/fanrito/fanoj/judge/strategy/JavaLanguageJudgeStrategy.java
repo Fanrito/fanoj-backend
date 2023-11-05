@@ -31,8 +31,8 @@ public class JavaLanguageJudgeStrategy implements JudgeStrategy {
         List<JudgeCase> judgeCaseList = judgeContext.getJudgeCaseList();
         JudgeInfoMessageEnum judgeInfoMessageEnum = JudgeInfoMessageEnum.ACCEPTED;
         JudgeInfo judgeInfoResponse = new JudgeInfo();
-        judgeInfoResponse.setTime(memory);
-        judgeInfoResponse.setMemory(time);
+        judgeInfoResponse.setTime(time);
+        judgeInfoResponse.setMemory(memory);
 
         if (outputList.size() != inputList.size()) {
             judgeInfoMessageEnum = JudgeInfoMessageEnum.WRONG_ANSWER;
