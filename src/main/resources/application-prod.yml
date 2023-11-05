@@ -10,7 +10,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://gz-cynosdbmysql-grp-ggivycsf.sql.tencentcdb.com:27206/fanoj
     username: root
-    password: fan@4536251
+    password: Fan@4536251
   # Redis 配置
   # todo 需替换配置
 #  redis:
