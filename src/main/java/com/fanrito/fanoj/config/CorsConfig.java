@@ -20,7 +20,7 @@ public class CorsConfig implements WebMvcConfigurer {
                 // 允许发送 Cookie
                 .allowCredentials(true)
                 // 放行哪些域名（必须用 patterns，否则 * 会和 allowCredentials 冲突）
-                .allowedOrigins("http://47.115.221.190:8080", "http://47.115.221.190:8001", "http://localhost:8080", "http://localhost:8001")
+                .allowedOriginPatterns("http://47.115.221.190:8080", "http://47.115.221.190:8001", "http://localhost:8080", "http://localhost:8001")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .exposedHeaders("*");

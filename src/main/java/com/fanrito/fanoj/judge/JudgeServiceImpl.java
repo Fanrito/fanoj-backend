@@ -13,6 +13,7 @@ import com.fanrito.fanoj.model.dto.question.JudgeCase;
 import com.fanrito.fanoj.judge.codesandbox.model.JudgeInfo;
 import com.fanrito.fanoj.model.entity.Question;
 import com.fanrito.fanoj.model.entity.QuestionSubmit;
+import com.fanrito.fanoj.model.enums.JudgeInfoMessageEnum;
 import com.fanrito.fanoj.model.enums.QuestionSubmitStatusEnum;
 import com.fanrito.fanoj.service.QuestionService;
 import com.fanrito.fanoj.service.QuestionSubmitService;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -81,14 +83,22 @@ public class JudgeServiceImpl implements JudgeService {
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
         List<String> outputList = executeCodeResponse.getOutputList();
         // 5) 根据沙箱的执行结果，设置题目的判题状态和信息
-        JudgeContext judgeContext = new JudgeContext();
-        judgeContext.setJudgeInfo(executeCodeResponse.getJudgeInfo());
-        judgeContext.setInputList(inputList);
-        judgeContext.setOutputList(outputList);
-        judgeContext.setJudgeCaseList(judgeCaseList);
-        judgeContext.setQuestion(question);
-        judgeContext.setQuestionSubmit(questionSubmit);
-        JudgeInfo judgeInfo = judgeManager.doJudge(judgeContext);
+
+        // 判断是否是编译错误
+        JudgeInfo judgeInfo = new JudgeInfo();
+        if (Objects.equals(executeCodeResponse.getMessage(), "java.lang.RuntimeException: 编译错误")) {
+            judgeInfo.setMessage(JudgeInfoMessageEnum.COMPILE_ERROR.getValue());
+        } else {
+            JudgeContext judgeContext = new JudgeContext();
+            judgeContext.setJudgeInfo(executeCodeResponse.getJudgeInfo());
+            judgeContext.setInputList(inputList);
+            judgeContext.setOutputList(outputList);
+            judgeContext.setJudgeCaseList(judgeCaseList);
+            judgeContext.setQuestion(question);
+            judgeContext.setQuestionSubmit(questionSubmit);
+            judgeInfo = judgeManager.doJudge(judgeContext);
+        }
+
         // 6) 修改数据库中的判题结果
         questionSubmitUpdate = new QuestionSubmit();
         questionSubmitUpdate.setId(questionSubmitId);
